@@ -12,7 +12,6 @@ bokeh_width, bokeh_height = 1024, 768
 
 df = pd.read_csv('dvf_gex.csv')
 
-df['radius'] = np.sqrt(df['price']) / 200.
 df.head()
 
 print(df.head())
@@ -97,6 +96,8 @@ def plotType5(lat, lng, zoom=10, map_type='roadmap'):
     return p
 
 def plotType6(lat, lng, zoom=10, map_type='roadmap'):
+    df['radius'] = np.sqrt(df['price']) / 200.
+
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
     hover = HoverTool(
@@ -116,6 +117,30 @@ def plotType6(lat, lng, zoom=10, map_type='roadmap'):
     show(p)
     return p
 
+def plotType7(lat, lng, zoom=10, map_type='roadmap'):
+    # need to change the radius coefficient
+    # so that the points are visible
+    df['radius'] = np.sqrt(df['price']) / 5.
+
+    gmap_options = GMapOptions(lat=lat, lng=lng,
+                               map_type=map_type, zoom=zoom)
+    hover = HoverTool(
+        tooltips = [
+            ('price', '@price euros'),
+            ('building', '@area_build m2'),
+            ('terrain', '@area_tot m2'),
+        ]
+    )
+    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+             width=bokeh_width, height=bokeh_height,
+             tools=[hover, 'reset', 'wheel_zoom', 'pan'])
+    source = ColumnDataSource(df)
+    # see how we set radius instead of size:
+    center = p.circle('lon', 'lat', radius='radius', alpha=0.5,
+                      color='yellow', source=source)
+    show(p)
+    return p
+
 
 # p = plotType1(lat, lng)
 #
@@ -127,4 +152,8 @@ def plotType6(lat, lng, zoom=10, map_type='roadmap'):
 
 # p = plotType5(lat, lng, map_type='satellite', zoom=12)
 
-p = plotType6(lat, lng, map_type='satellite', zoom=11)
+# p = plotType6(lat, lng, map_type='satellite', zoom=11)
+
+p = plotType7(lat, lng, map_type='satellite', zoom=11)
+
+
