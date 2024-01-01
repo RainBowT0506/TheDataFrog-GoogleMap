@@ -4,7 +4,7 @@ import os
 from Constant import API_Key_Google_Map
 from bokeh.io import output_file, show
 from bokeh.plotting import gmap
-from bokeh.models import GMapOptions
+from bokeh.models import GMapOptions,ColumnDataSource
 
 bokeh_width, bokeh_height = 500, 400
 
@@ -14,8 +14,7 @@ print(df.head())
 
 lat, lng = 46.2437, 6.0251
 
-def plotRoadMap(lat, lng, zoom=10, map_type='roadmap'):
-    output_file(map_type + ".html")
+def plotType1(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
     p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
@@ -24,8 +23,7 @@ def plotRoadMap(lat, lng, zoom=10, map_type='roadmap'):
     output_file("Roadmap.html")
     return p
 
-def plotCircleMarker(lat, lng, zoom=10, map_type='roadmap'):
-    output_file("CircleMarker-"+map_type + ".html")
+def plotType2(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
     p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
@@ -33,11 +31,31 @@ def plotCircleMarker(lat, lng, zoom=10, map_type='roadmap'):
     # beware, longitude is on the x axis ;-)
     center = p.circle([lng], [lat], size=10, alpha=0.5, color='red')
     show(p)
+    output_file("Terrain.html")
     return p
 
-# p = plotRoadMap(lat, lng)
 
-p = plotCircleMarker(lat, lng, map_type='terrain')
+
+def plotType3(lat, lng, zoom=10, map_type='roadmap'):
+    gmap_options = GMapOptions(lat=lat, lng=lng,
+                               map_type=map_type, zoom=zoom)
+    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+             width=bokeh_width, height=bokeh_height)
+    # definition of the column data source:
+    source = ColumnDataSource(df)
+    # see how we specify the x and y columns as strings,
+    # and how to declare as a source the ColumnDataSource:
+    center = p.circle('lon', 'lat', size=4, alpha=0.2,
+                      color='yellow', source=source)
+    show(p)
+    output_file("Satellite.html")
+    return p
+
+p = plotType1(lat, lng)
+
+p = plotType2(lat, lng, map_type='terrain')
+
+p = plotType3(lat, lng, map_type='satellite')
 
 show(p)
 
