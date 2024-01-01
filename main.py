@@ -171,19 +171,19 @@ def plotType8(df, lat, lng, zoom=10, map_type='roadmap'):
     return p
 
 
-# p = plotType1(lat, lng)
-#
-# p = plotType2(lat, lng, map_type='terrain')
-#
-# p = plotType3(lat, lng, map_type='satellite')
+p = plotType1(lat, lng)
 
-# p = plotType4(lat, lng, map_type='satellite', zoom=12)
+p = plotType2(lat, lng, map_type='terrain')
 
-# p = plotType5(lat, lng, map_type='satellite', zoom=12)
+p = plotType3(lat, lng, map_type='satellite')
 
-# p = plotType6(lat, lng, map_type='satellite', zoom=11)
+p = plotType4(lat, lng, map_type='satellite', zoom=12)
 
-# p = plotType7(lat, lng, map_type='satellite', zoom=11)
+p = plotType5(lat, lng, map_type='satellite', zoom=12)
+
+p = plotType6(lat, lng, map_type='satellite', zoom=11)
+
+p = plotType7(lat, lng, map_type='satellite', zoom=11)
 
 df['radius'] = np.sqrt(df['price']) / 5.
 dfb = df[df['area_build'] > 0.].copy()
