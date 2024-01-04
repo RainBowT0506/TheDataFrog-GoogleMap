@@ -17,32 +17,31 @@ lat, lng = 46.2437, 6.0251
 df = pd.read_csv('dvf_gex.csv')
 pd.set_option('display.max_columns', None)
 
-def plotType1(lat, lng, zoom=10, map_type='roadmap'):
+def plotBasicMap(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Basic Map',
              width=bokeh_width, height=bokeh_height)
     show(p)
-    output_file("Roadmap.html")
+    output_file("Basic Map.html")
     return p
 
 
-def plotType2(lat, lng, zoom=10, map_type='roadmap'):
+def plotMapWithCenterMarker(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Map with Center Marker',
              width=bokeh_width, height=bokeh_height)
-    # beware, longitude is on the x axis ;-)
     center = p.circle([lng], [lat], size=10, alpha=0.5, color='red')
     show(p)
-    output_file("Terrain.html")
+    output_file("Map with Center Marker.html")
     return p
 
 
-def plotType3(lat, lng, zoom=10, map_type='roadmap'):
+def plotMapWithMultiplePoints(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Map with Multiple Points',
              width=bokeh_width, height=bokeh_height)
     # definition of the column data source:
     source = ColumnDataSource(df)
@@ -51,25 +50,26 @@ def plotType3(lat, lng, zoom=10, map_type='roadmap'):
     center = p.circle('lon', 'lat', size=4, alpha=0.2,
                       color='yellow', source=source)
     show(p)
-    output_file("Satellite.html")
+    output_file("Map with Multiple Points.html")
     return p
 
 
-def plotType4(lat, lng, zoom=10, map_type='roadmap'):
+def plotMapWithTools(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
     # the tools are defined below:
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Map with Tools',
              width=bokeh_width, height=bokeh_height,
              tools=['hover', 'reset', 'wheel_zoom', 'pan'])
     source = ColumnDataSource(df)
     center = p.circle('lon', 'lat', size=4, alpha=0.5,
                       color='yellow', source=source)
     show(p)
+    output_file("Map with Tools.html")
     return p
 
 
-def plotType5(lat, lng, zoom=10, map_type='roadmap'):
+def plotMapWithCustomHoverTool(lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
     # the tools are defined below:
@@ -84,16 +84,17 @@ def plotType5(lat, lng, zoom=10, map_type='roadmap'):
     )
     # below we replaced 'hover' (the default hover tool),
     # by our custom hover tool
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Map with Custom Hover Tool',
              width=bokeh_width, height=bokeh_height,
              tools=[hover, 'reset', 'wheel_zoom', 'pan'])
     source = ColumnDataSource(df)
     center = p.circle('lon', 'lat', size=4, alpha=0.5,
                       color='yellow', source=source)
     show(p)
+    output_file("Map with Custom Hover Tool.html")
     return p
 
-def plotType6(lat, lng, zoom=10, map_type='roadmap'):
+def plotScaledCircleSizesMap(lat, lng, zoom=10, map_type='roadmap'):
     df['radius'] = np.sqrt(df['price']) / 200.
 
     gmap_options = GMapOptions(lat=lat, lng=lng,
@@ -105,7 +106,7 @@ def plotType6(lat, lng, zoom=10, map_type='roadmap'):
             ('terrain', '@area_tot m2'),
         ]
     )
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Scaled Circle Sizes Map',
              width=bokeh_width, height=bokeh_height,
              tools=[hover, 'reset', 'wheel_zoom', 'pan'])
     source = ColumnDataSource(df)
@@ -113,9 +114,10 @@ def plotType6(lat, lng, zoom=10, map_type='roadmap'):
     center = p.circle('lon', 'lat', size='radius',
                       alpha=0.5, color='yellow', source=source)
     show(p)
+    output_file("Scaled Circle Sizes Map.html")
     return p
 
-def plotType7(lat, lng, zoom=10, map_type='roadmap'):
+def plotAdjustedRadiusMap(lat, lng, zoom=10, map_type='roadmap'):
     # need to change the radius coefficient
     # so that the points are visible
     df['radius'] = np.sqrt(df['price']) / 5.
@@ -129,7 +131,7 @@ def plotType7(lat, lng, zoom=10, map_type='roadmap'):
             ('terrain', '@area_tot m2'),
         ]
     )
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Adjusted Radius Map',
              width=bokeh_width, height=bokeh_height,
              tools=[hover, 'reset', 'wheel_zoom', 'pan'])
     source = ColumnDataSource(df)
@@ -137,9 +139,10 @@ def plotType7(lat, lng, zoom=10, map_type='roadmap'):
     center = p.circle('lon', 'lat', radius='radius', alpha=0.5,
                       color='yellow', source=source)
     show(p)
+    output_file("Adjusted Radius Map.html")
     return p
 
-def plotType8(df, lat, lng, zoom=10, map_type='roadmap'):
+def plotColorMappedCirclesMap(df, lat, lng, zoom=10, map_type='roadmap'):
     gmap_options = GMapOptions(lat=lat, lng=lng,
                                map_type=map_type, zoom=zoom)
     hover = HoverTool(
@@ -152,7 +155,7 @@ def plotType8(df, lat, lng, zoom=10, map_type='roadmap'):
             ('terrain', '@area_tot m2'),
         ]
     )
-    p = gmap(API_Key_Google_Map, gmap_options, title='Pays de Gex',
+    p = gmap(API_Key_Google_Map, gmap_options, title='Color-Mapped Circles Map',
              width=bokeh_width, height=bokeh_height,
              tools=[hover, 'reset', 'wheel_zoom', 'pan'])
     source = ColumnDataSource(df)
@@ -168,27 +171,28 @@ def plotType8(df, lat, lng, zoom=10, map_type='roadmap'):
                          location=(0,0))
     p.add_layout(color_bar, 'right')
     show(p)
+    output_file("Color-Mapped Circles Map.html")
     return p
 
 
-p = plotType1(lat, lng)
+p = plotBasicMap(lat, lng)
 
-p = plotType2(lat, lng, map_type='terrain')
+p = plotMapWithCenterMarker(lat, lng, map_type='terrain')
 
-p = plotType3(lat, lng, map_type='satellite')
+p = plotMapWithMultiplePoints(lat, lng, map_type='satellite')
 
-p = plotType4(lat, lng, map_type='satellite', zoom=12)
+p = plotMapWithTools(lat, lng, map_type='satellite', zoom=12)
 
-p = plotType5(lat, lng, map_type='satellite', zoom=12)
+p = plotMapWithCustomHoverTool(lat, lng, map_type='satellite', zoom=12)
 
-p = plotType6(lat, lng, map_type='satellite', zoom=11)
+p = plotScaledCircleSizesMap(lat, lng, map_type='satellite', zoom=11)
 
-p = plotType7(lat, lng, map_type='satellite', zoom=11)
+p = plotAdjustedRadiusMap(lat, lng, map_type='satellite', zoom=11)
 
 df['radius'] = np.sqrt(df['price']) / 5.
 dfb = df[df['area_build'] > 0.].copy()
 dfb['pricem2'] = dfb['price'] / dfb['area_build']
 print(dfb.head())
-p = plotType8(dfb, lat, lng, map_type='roadmap', zoom=11)
+p = plotColorMappedCirclesMap(dfb, lat, lng, map_type='roadmap', zoom=11)
 
 
